@@ -6,3 +6,7 @@ venv
 .venv
 venv/local
 .venv/local                                             
+.gitignore
+.git/   
+.idea/
+.DS_Store   
