@@ -10,7 +10,8 @@ router = APIRouter(prefix="/students")
 @router.post("/create")
 async def post_student(student: Student):
     ''' to create a student  '''
-    db.StudentDB.students.insert_one(student.dict())
+    payload = student.dict(exclude={"student_id"}, exclude_none=True)
+    db.StudentDB.students.insert_one(payload)
     return {"message": "Student created successfully"}  
 
 @router.get("/get/{student_id}")
@@ -38,9 +39,10 @@ async def get_all_students():
 async def update_student(student_id: str, student: Student):
     ''' To update a student using their ID '''
     try:
+        payload = student.dict(exclude={"student_id"}, exclude_none=True)
         result = db.StudentDB.students.update_one(
             {"_id": ObjectId(student_id)},
-            {"$set": student.dict()}
+            {"$set": payload}
         )
         if result.modified_count > 0:
             updated_student = db.StudentDB.students.find_one({"_id": ObjectId(student_id)})

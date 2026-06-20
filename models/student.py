@@ -1,8 +1,9 @@
+from typing import Optional
+
 from pydantic import BaseModel
-# from bson import ObjectId   
 
 class Student(BaseModel):
-    student_id: str
+    student_id: Optional[str] = None
     fname: str
     lname: str
     age: int
