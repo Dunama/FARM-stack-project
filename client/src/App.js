@@ -153,6 +153,7 @@ function App() {
                       <input
                         className="form-control"
                         name="fname"
+                        placeholder='John'
                         value={formData.fname}
                         onChange={handleChange}
                         required
@@ -163,6 +164,7 @@ function App() {
                       <input
                         className="form-control"
                         name="lname"
+                        placeholder='Doe'
                         value={formData.lname}
                         onChange={handleChange}
                         required
@@ -197,6 +199,7 @@ function App() {
                         type="email"
                         className="form-control"
                         name="email"
+                        placeholder='johndoe@gmail.com'
                         value={formData.email}
                         onChange={handleChange}
                         required
