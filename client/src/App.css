@@ -802,6 +802,7 @@ body {
 .method-badge--get    { background: #E8F5E9; color: #2E7D32; }
 .method-badge--post   { background: #E3F2FD; color: #1565C0; }
 .method-badge--put    { background: var(--amber-light); color: #7B4F00; }
+.method-badge--patch  { background: #F3E5F5; color: #6A1B9A; }
 .method-badge--delete { background: #FFEBEE; color: #C62828; }
 
 .endpoint-path {

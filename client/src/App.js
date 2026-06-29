@@ -7,36 +7,61 @@ const api = axios.create({
 });
 
 const API_ENDPOINTS = [
-  {
-    method: 'GET',
-    path: '/students/get',
-    description: 'Retrieve all student records from the database.',
-    action: 'view-all',
-  },
-  {
-    method: 'POST',
-    path: '/students/create',
-    description: 'Create and save a new student record.',
-    action: 'create',
-  },
-  {
-    method: 'GET',
-    path: '/students/get/{id}',
-    description: 'Retrieve a single student record by their MongoDB ObjectId.',
-    action: 'view-one',
-  },
-  {
-    method: 'PUT',
-    path: '/students/update/{id}',
-    description: 'Update all fields on an existing student record by ID.',
-    action: 'update',
-  },
-  {
-    method: 'DELETE',
-    path: '/students/delete/{id}',
-    description: 'Permanently delete a student record by ID.',
-    action: 'delete',
-  },
+  // ── Students (legacy) ────────────────────────────────────────────
+  { group: 'Students', method: 'GET',    path: '/students/get',              description: 'Retrieve all student records.',                      action: 'view-all' },
+  { group: 'Students', method: 'POST',   path: '/students/create',           description: 'Create a new student record.',                       action: 'create'   },
+  { group: 'Students', method: 'GET',    path: '/students/get/{id}',         description: 'Retrieve a single student by ID.',                   action: 'view-one' },
+  { group: 'Students', method: 'PUT',    path: '/students/update/{id}',      description: 'Update a student record by ID.',                     action: 'update'   },
+  { group: 'Students', method: 'DELETE', path: '/students/delete/{id}',      description: 'Delete a student record by ID.',                     action: 'delete'   },
+
+  // ── Users ────────────────────────────────────────────────────────
+  { group: 'Users', method: 'GET',    path: '/users/get',             description: 'Retrieve all user records.',                         action: 'view-all' },
+  { group: 'Users', method: 'POST',   path: '/users/create',          description: 'Create a new user with full profile fields.',        action: 'create'   },
+  { group: 'Users', method: 'GET',    path: '/users/get/{id}',        description: 'Retrieve a single user by MongoDB ObjectId.',        action: 'view-one' },
+  { group: 'Users', method: 'PUT',    path: '/users/update/{id}',     description: 'Update any field on a user record.',                 action: 'update'   },
+  { group: 'Users', method: 'DELETE', path: '/users/delete/{id}',     description: 'Permanently delete a user record.',                  action: 'delete'   },
+
+  // ── Roles ────────────────────────────────────────────────────────
+  { group: 'Roles', method: 'GET',    path: '/roles/get',             description: 'List all roles.',                                    action: '' },
+  { group: 'Roles', method: 'POST',   path: '/roles/create',          description: 'Create a new role.',                                 action: '' },
+  { group: 'Roles', method: 'GET',    path: '/roles/get/{id}',        description: 'Get a role by ID.',                                  action: '' },
+  { group: 'Roles', method: 'PUT',    path: '/roles/update/{id}',     description: 'Update a role.',                                     action: '' },
+  { group: 'Roles', method: 'DELETE', path: '/roles/delete/{id}',     description: 'Delete a role.',                                     action: '' },
+
+  // ── Admin Groups ─────────────────────────────────────────────────
+  { group: 'Admin Groups', method: 'GET',    path: '/admin-groups/get',          description: 'List all admin groups.',                         action: '' },
+  { group: 'Admin Groups', method: 'POST',   path: '/admin-groups/create',       description: 'Create a new admin group.',                      action: '' },
+  { group: 'Admin Groups', method: 'GET',    path: '/admin-groups/get/{id}',     description: 'Get an admin group by ID.',                      action: '' },
+  { group: 'Admin Groups', method: 'PUT',    path: '/admin-groups/update/{id}',  description: 'Update an admin group.',                         action: '' },
+  { group: 'Admin Groups', method: 'DELETE', path: '/admin-groups/delete/{id}',  description: 'Delete an admin group.',                         action: '' },
+
+  // ── Services ─────────────────────────────────────────────────────
+  { group: 'Services', method: 'GET',    path: '/services/get',          description: 'List all services.',                                 action: '' },
+  { group: 'Services', method: 'POST',   path: '/services/create',       description: 'Create a new service.',                              action: '' },
+  { group: 'Services', method: 'PUT',    path: '/services/update/{id}',  description: 'Update a service.',                                  action: '' },
+  { group: 'Services', method: 'DELETE', path: '/services/delete/{id}',  description: 'Delete a service.',                                  action: '' },
+
+  // ── Permissions ──────────────────────────────────────────────────
+  { group: 'Permissions', method: 'GET',    path: '/permissions/get',          description: 'List all permissions.',                          action: '' },
+  { group: 'Permissions', method: 'POST',   path: '/permissions/create',       description: 'Create a new permission.',                       action: '' },
+  { group: 'Permissions', method: 'PUT',    path: '/permissions/update/{id}',  description: 'Update a permission.',                           action: '' },
+  { group: 'Permissions', method: 'DELETE', path: '/permissions/delete/{id}',  description: 'Delete a permission.',                           action: '' },
+
+  // ── Admin Operations ─────────────────────────────────────────────
+  { group: 'Admin', method: 'GET',   path: '/admin/stats',                              description: 'Aggregated dashboard stats across all collections.',  action: '' },
+  { group: 'Admin', method: 'GET',   path: '/admin/users',                              description: 'Admin view of all users.',                            action: '' },
+  { group: 'Admin', method: 'GET',   path: '/admin/users/active',                       description: 'List only active users.',                             action: '' },
+  { group: 'Admin', method: 'GET',   path: '/admin/users/inactive',                     description: 'List only inactive/deactivated users.',               action: '' },
+  { group: 'Admin', method: 'GET',   path: '/admin/users/unverified',                   description: 'List users with pending verification status.',         action: '' },
+  { group: 'Admin', method: 'GET',   path: '/admin/users/by-role/{role_id}',            description: 'Users filtered by a given role ID.',                  action: '' },
+  { group: 'Admin', method: 'GET',   path: '/admin/users/by-group/{group_id}',          description: 'Users filtered by a given admin group ID.',            action: '' },
+  { group: 'Admin', method: 'PATCH', path: '/admin/users/{id}/toggle-status',           description: 'Toggle is_active on/off for a user.',                 action: '' },
+  { group: 'Admin', method: 'PATCH', path: '/admin/users/{id}/verify',                  description: 'Set verification_status to verified + timestamp.',     action: '' },
+  { group: 'Admin', method: 'PATCH', path: '/admin/users/{id}/suspend',                 description: 'Suspend a user (deactivate + mark suspended).',        action: '' },
+  { group: 'Admin', method: 'PATCH', path: '/admin/users/{id}/assign-role/{role_id}',   description: 'Assign a role to a user.',                            action: '' },
+  { group: 'Admin', method: 'PATCH', path: '/admin/users/{id}/assign-group/{group_id}', description: 'Assign an admin group to a user.',                    action: '' },
+  { group: 'Admin', method: 'PATCH', path: '/admin/users/{id}/assign-service/{svc_id}', description: 'Assign a service to a user.',                         action: '' },
+  { group: 'Admin', method: 'PATCH', path: '/admin/users/{id}/record-login',            description: 'Update last_login_at for a user.',                    action: '' },
 ];
 
 const NAV_ITEMS = [
@@ -546,36 +571,49 @@ function App() {
               <div className="view-header">
                 <h1 className="view-title">API Endpoints</h1>
                 <p className="view-subtitle">
-                  All available REST API routes — click "Try it" to jump to the relevant UI.
+                  All available REST API routes — grouped by resource.
                 </p>
               </div>
 
-              <div className="endpoints-grid">
-                {API_ENDPOINTS.map((ep, idx) => (
-                  <div key={idx} className="endpoint-card">
-                    <div className="endpoint-card__top">
-                      <span className={`method-badge method-badge--${ep.method.toLowerCase()}`}>
-                        {ep.method}
-                      </span>
-                      <code className="endpoint-path">{ep.path}</code>
-                    </div>
-                    <p className="endpoint-description">{ep.description}</p>
-                    <button
-                      className="btn btn--ghost endpoint-card__action"
-                      onClick={() => handleEndpointAction(ep.action)}
-                    >
-                      Try it →
-                    </button>
-                  </div>
-                ))}
-              </div>
-
-              <div className="base-url-card">
+              <div className="base-url-card" style={{ marginBottom: '28px' }}>
                 <div className="base-url-label">Base URL</div>
                 <code className="base-url-text">
                   {process.env.REACT_APP_API_URL || 'http://localhost:8000'}
                 </code>
               </div>
+
+              {/* Group endpoints by their group field */}
+              {[...new Set(API_ENDPOINTS.map((e) => e.group))].map((group) => (
+                <div key={group} style={{ marginBottom: '32px' }}>
+                  <div className="section-header">
+                    <h2 className="section-title">{group}</h2>
+                    <span className="topbar__badge">
+                      {API_ENDPOINTS.filter((e) => e.group === group).length} routes
+                    </span>
+                  </div>
+                  <div className="endpoints-grid">
+                    {API_ENDPOINTS.filter((e) => e.group === group).map((ep, idx) => (
+                      <div key={idx} className="endpoint-card">
+                        <div className="endpoint-card__top">
+                          <span className={`method-badge method-badge--${ep.method.toLowerCase()}`}>
+                            {ep.method}
+                          </span>
+                          <code className="endpoint-path">{ep.path}</code>
+                        </div>
+                        <p className="endpoint-description">{ep.description}</p>
+                        {ep.action && (
+                          <button
+                            className="btn btn--ghost endpoint-card__action"
+                            onClick={() => handleEndpointAction(ep.action)}
+                          >
+                            Try it →
+                          </button>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
             </div>
           )}
 
