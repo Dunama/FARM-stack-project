@@ -1,7 +1,8 @@
 from datetime import datetime
 
 from bson.objectid import ObjectId
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Request
+from fastapi.routing import APIRoute
 
 from config import db
 from schemas.user import UserEntity, serialize_users
@@ -15,15 +16,41 @@ _services    = lambda: db.UserDB.services
 _permissions = lambda: db.UserDB.permissions
 
 
+# ── Live route registry ───────────────────────────────────────────────────────
+
+@router.get("/routes")
+async def list_routes(request: Request):
+    """Return every registered API route so the dashboard can render them live.
+
+    Using request.app instead of importing the app object directly avoids the
+    circular import that would occur if admin.py imported from main.py.
+    """
+    routes = []
+    for route in request.app.routes:
+        if isinstance(route, APIRoute):
+            for method in sorted(route.methods):
+                routes.append({
+                    "path":        route.path,
+                    "method":      method,
+                    "name":        route.name,
+                    "description": route.description or "",
+                    "tags":        route.tags or [],
+                })
+    routes.sort(key=lambda r: (r["tags"], r["path"], r["method"]))
+    return {"routes": routes}
+
+
 # ── Dashboard stats ──────────────────────────────────────────────────────────
 
 @router.get("/stats")
 async def admin_stats():
     """Aggregate dashboard statistics across all collections."""
+    # Students live in a separate DB from users; both are counted so the
+    # dashboard can show a complete picture without separate API calls.
+    total_students   = db.StudentDB.students.count_documents({})
     total_users      = _users().count_documents({})
     active_users     = _users().count_documents({"is_active": True})
     inactive_users   = _users().count_documents({"is_active": False})
-    available_users  = _users().count_documents({"is_available": True})
     verified_users   = _users().count_documents({"verification_status": "verified"})
     pending_users    = _users().count_documents({"verification_status": "pending"})
     suspended_users  = _users().count_documents({"verification_status": "suspended"})
@@ -35,11 +62,11 @@ async def admin_stats():
     return {
         "message": "Stats retrieved.",
         "stats": {
+            "students": total_students,
             "users": {
-                "total":     total_users,
-                "active":    active_users,
-                "inactive":  inactive_users,
-                "available": available_users,
+                "total":    total_users,
+                "active":   active_users,
+                "inactive": inactive_users,
             },
             "verification": {
                 "verified":  verified_users,
