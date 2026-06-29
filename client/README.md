@@ -1,34 +1,72 @@
-# React client
+# Client — React Frontend
 
-This folder contains the React + Bootstrap frontend for the student CRUD app.
+Single-page dashboard for the FARM Stack User & Student Management System.
 
-## What it does
+## Stack
 
-- Adds a student
-- Lists all students
-- Updates a student
-- Deletes a student
+- **React 19** — UI library
+- **Axios 1.16** — HTTP client
+- **Bootstrap 5.3** — Utility CSS (form controls only; layout is custom)
+- **Create React App** — Build tooling
+
+## Views
+
+| View | Route trigger | What it shows |
+|------|--------------|---------------|
+| **Dashboard** | Sidebar → Dashboard | Stat cards (total students, avg GPA/CGPA, active levels), quick-action buttons, recent records list |
+| **Students** | Sidebar → Students | Add/edit form (left) + records table (right) |
+| **API Endpoints** | Sidebar → API Endpoints | All 35 REST routes grouped by resource, with method badges and "Try it" navigation |
 
 ## Setup
 
-1. Make sure the FastAPI backend is running on `http://localhost:8000`.
-2. Start the React app from this folder:
-
 ```bash
-npm start
+# From the client/ directory
+npm install
 ```
 
-## API connection
+Create a `.env` file in this directory:
 
-The app calls these backend endpoints:
-
-- `GET /students/get`
-- `POST /students/create`
-- `PUT /students/update/{student_id}`
-- `DELETE /students/delete/{student_id}`
-
-If your backend runs on a different host or port, set:
-
-```bash
+```dotenv
 REACT_APP_API_URL=http://localhost:8000
 ```
+
+## Scripts
+
+| Command | Description |
+|---------|-------------|
+| `npm start` | Start the dev server at `http://localhost:3000` |
+| `npm run build` | Production build into `build/` |
+| `npm test` | Run the test suite |
+
+## Environment Variables
+
+| Variable | Required | Default | Description |
+|----------|----------|---------|-------------|
+| `REACT_APP_API_URL` | Yes | — | Base URL of the FastAPI backend, no trailing slash |
+
+## Project Files
+
+```
+client/
+├── public/
+│   └── index.html
+└── src/
+    ├── App.js     # Root component — all state, API calls, and view rendering
+    ├── App.css    # Full design system (CSS variables, layout, all component styles)
+    └── index.js   # React DOM entry point
+```
+
+All application logic lives in `App.js`. State is managed with `useState`/`useEffect` hooks. There are no additional routing libraries — view switching is handled by an `activeView` state variable (`'dashboard' | 'students' | 'endpoints'`).
+
+## API Calls
+
+The Axios instance is created once with `process.env.REACT_APP_API_URL` as the base URL. All requests go through this instance:
+
+| Action | Method + path |
+|--------|--------------|
+| Load all students | `GET /students/get` |
+| Add student | `POST /students/create` |
+| Update student | `PUT /students/update/{id}` |
+| Delete student | `DELETE /students/delete/{id}` |
+
+See the API Endpoints view in the app, or the root `README.md`, for the full list of available backend routes.
